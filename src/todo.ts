@@ -14,6 +14,7 @@ const inputT = document.getElementById("input")! as HTMLInputElement;
 const board = document.getElementById("task-board")! as HTMLDivElement;
 const allDiv = document.querySelectorAll(".task-taps div");
 
+addBtn.addEventListener("click", addTask);
 for (let i = 0; i < allDiv.length; i++) {
   allDiv[i].addEventListener("click", pressTabs);
 }
@@ -26,7 +27,8 @@ interface objList {
 
 let todoList: objList[] = [];
 let filterTodo: objList[] = [];
-addBtn.addEventListener("click", addTask);
+let selectTag:string="all"
+
 
 function addTask(e: Event) {
   const inputValue = inputT.value;
@@ -42,22 +44,29 @@ function addTask(e: Event) {
 
 function render() {
   let HTMLTask: string = "";
-  for (let i = 0; i < todoList.length; i++) {
-    if (todoList[i].isComplete === true) {
+  let list:objList[]=[]
+  if(selectTag === 'all'){
+    list = todoList
+  }else{
+    list = filterTodo
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].isComplete === true) {
       HTMLTask += `<div class="task">
-   <div class="task-done">${todoList[i].todo}</div>
+   <div class="task-done">${list[i].todo}</div>
    <div class="btns">
-<button onclick="toggleCheck('${todoList[i].id}')" >check</button>
-<button onclick="deleteBtn('${todoList[i].id}')">delete</button>
+<button onclick="toggleCheck('${list[i].id}')" >check</button>
+<button onclick="deleteBtn('${list[i].id}')">delete</button>
 
  </div>
  </div>`;
     } else {
       HTMLTask += `<div class="task">
-   <div>${todoList[i].todo}</div>
+   <div>${list[i].todo}</div>
    <div class="btns">
-<button onclick="toggleCheck('${todoList[i].id}')" >check</button>
-<button onclick="deleteBtn('${todoList[i].id}')">delete</button>
+<button onclick="toggleCheck('${list[i].id}')" >check</button>
+<button onclick="deleteBtn('${list[i].id}')">delete</button>
 
  </div>
  </div>`;
@@ -92,23 +101,30 @@ function toggleCheck(id: string) {
 function pressTabs(e: Event) {
   const eventT = e.target as HTMLElement;
   console.log(eventT.id);
-  if (eventT.id === "All") {
-    render();
+  filterTodo=[]
+  if (eventT.id === "all") {
+    selectTag='all'
+    
   } else if (eventT.id === "notDone") {
+    selectTag='notDone'
     for (let i = 0; i < todoList.length; i++) {
       if (todoList[i].isComplete === false) {
         filterTodo.push(todoList[i]);
-        console.log(todoList[i], "false");
+        console.log(filterTodo,'false');
       }
     }
+    
   } else if (eventT.id === "done") {
+    selectTag='done'
     for (let i = 0; i < todoList.length; i++) {
       if (todoList[i].isComplete === true) {
         filterTodo.push(todoList[i]);
-        console.log(todoList[i], "true");
+        console.log(filterTodo,'true');
       }
     }
+   
   }
+  render()
 }
 
 function randomId(): string {
