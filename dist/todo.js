@@ -13,6 +13,7 @@ const addBtn = document.getElementById("addBtn");
 const inputT = document.getElementById("input");
 const board = document.getElementById("task-board");
 const allDiv = document.querySelectorAll(".task-taps div");
+const line = document.getElementById("line");
 addBtn.addEventListener("click", addTask);
 for (let i = 0; i < allDiv.length; i++) {
     allDiv[i].addEventListener("click", pressTabs);
@@ -84,6 +85,10 @@ function toggleCheck(id) {
 }
 function pressTabs(e) {
     const eventT = e.target;
+    const currentT = e.currentTarget;
+    line.style.left = currentT.offsetLeft + "px";
+    line.style.width = currentT.offsetWidth + "px";
+    line.style.top = currentT.offsetTop + currentT.offsetHeight + "px";
     console.log(eventT.id);
     filterTodo = [];
     if (eventT.id === "all") {
@@ -94,7 +99,6 @@ function pressTabs(e) {
         for (let i = 0; i < todoList.length; i++) {
             if (todoList[i].isComplete === false) {
                 filterTodo.push(todoList[i]);
-                console.log(filterTodo, 'false');
             }
         }
     }
@@ -103,7 +107,6 @@ function pressTabs(e) {
         for (let i = 0; i < todoList.length; i++) {
             if (todoList[i].isComplete === true) {
                 filterTodo.push(todoList[i]);
-                console.log(filterTodo, 'true');
             }
         }
     }
